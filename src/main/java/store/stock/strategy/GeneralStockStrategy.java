@@ -1,6 +1,6 @@
 package store.stock.strategy;
 
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderCommand;
 import store.domain.vo.ProductStock;
 import store.order.vo.OrderResult;
@@ -14,7 +14,7 @@ public class GeneralStockStrategy implements StockStrategy {
     }
 
     @Override
-    public OrderResult process(OrderCommand command, OrderApprover approver) {
+    public OrderResult process(OrderCommand command, OrderFunction function) {
         ProductStock stock = command.getStock();
 
         int promotionStock = Math.min(stock.getPromotionStock(), command.getQuantity());

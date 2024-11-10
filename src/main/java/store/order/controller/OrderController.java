@@ -1,9 +1,9 @@
 package store.order.controller;
 
 import store.common.parser.OrderItemsParser;
-import store.manager.AgreementApprover;
+import store.manager.ApprovalFunction;
 import store.manager.ApprovalExecutor;
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderItems;
 import store.order.service.OrderService;
 import store.order.vo.OrderResults;
@@ -29,15 +29,15 @@ public class OrderController {
         executor.execute(retryOrder());
     }
 
-    private void run(AgreementApprover approver) {
+    private void run(ApprovalFunction function) {
         outputView.printProducts(orderService.getProducts());
-        OrderResults results = orderService.order(createOrderItems(), createApprover());
+        OrderResults results = orderService.order(createOrderItems(), createFunction());
 
         membership(results);
         outputView.printReceipt(results);
 
-        if (approver.approve()) {
-            run(approver);
+        if (function.approve()) {
+            run(function);
         }
     }
 
@@ -53,8 +53,8 @@ public class OrderController {
         return orderItems;
     }
 
-    private OrderApprover createApprover() {
-        return OrderApprover.builder()
+    private OrderFunction createFunction() {
+        return OrderFunction.builder()
                 .freeQuantity(inputView::readAgreeFreeQuantity)
                 .fullPayment(inputView::readAgreeFullPayment)
                 .build();
@@ -66,7 +66,7 @@ public class OrderController {
         }
     }
 
-    private AgreementApprover retryOrder() {
+    private ApprovalFunction retryOrder() {
         return (values) -> inputView.readAgreeRetryOrder();
     }
 }

@@ -5,7 +5,7 @@ import store.common.constant.ApprovalOptions;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import static store.common.constant.ErrorMessage.INVALID_INPUT_AGREEMENT;
+import static store.common.constant.ErrorMessage.INVALID_INPUT_APPROVAL;
 
 public class ApprovalParser {
 
@@ -16,16 +16,16 @@ public class ApprovalParser {
     }
 
     private static void validate(String input) {
-        if (isInvalidAgreement(input)) {
-            throw new IllegalArgumentException(INVALID_INPUT_AGREEMENT.message());
+        if (isInvalidApproval(input)) {
+            throw new IllegalArgumentException(INVALID_INPUT_APPROVAL.message());
         }
     }
 
-    private static boolean isInvalidAgreement(String input) {
-        return Arrays.stream(ApprovalOptions.values()).noneMatch(matchesAgreement(input));
+    private static boolean isInvalidApproval(String input) {
+        return Arrays.stream(ApprovalOptions.values()).noneMatch(matchesApproval(input));
     }
 
-    private static Predicate<ApprovalOptions> matchesAgreement(String input) {
-        return agreement -> agreement.name().equals(input);
+    private static Predicate<ApprovalOptions> matchesApproval(String input) {
+        return approval -> approval.name().equals(input);
     }
 }

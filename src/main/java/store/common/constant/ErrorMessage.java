@@ -23,7 +23,7 @@ public enum ErrorMessage {
     INVALID_PROMOTION_BUY_COUNT("프로모션 구매 개수는 0보다 커야합니다."),
     INVALID_PROMOTION_GET_COUNT("증정개수는 1이여야 합니다."),
     INVALID_PROMOTION_DATE("프로모션 시작날짜가 종료날짜보다 이후일 수 없습니다."),
-    INVALID_INPUT_AGREEMENT("(Y/N) 중에 입력해주세요."),
+    INVALID_INPUT_APPROVAL("(Y/N) 중에 입력해주세요."),
     INVALID_INPUT_ORDER_ITEMS("올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요."),
     INVALID_INPUT_NOT_EXIST_PRODUCT("존재하지 않는 상품입니다. 다시 입력해 주세요."),
     INVALID_INPUT_EXCEED_STOCK("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요."),

@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static store.common.constant.ErrorMessage.INVALID_INPUT_AGREEMENT;
+import static store.common.constant.ErrorMessage.INVALID_INPUT_APPROVAL;
 
 class ApprovalParserTest {
 
@@ -16,7 +16,7 @@ class ApprovalParserTest {
         //when
         assertThatThrownBy(() -> ApprovalParser.parse(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(INVALID_INPUT_AGREEMENT.message());
+                .hasMessage(INVALID_INPUT_APPROVAL.message());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package store.manager;
 
 @FunctionalInterface
-public interface AgreementApprover {
+public interface ApprovalFunction {
 
     Boolean approve(Object... values);
 }

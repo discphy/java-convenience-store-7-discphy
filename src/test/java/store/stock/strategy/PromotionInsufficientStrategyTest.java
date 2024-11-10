@@ -9,7 +9,7 @@ import store.domain.vo.ProductInfo;
 import store.domain.vo.ProductStock;
 import store.domain.vo.PromotionCount;
 import store.domain.vo.PromotionDate;
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderCommand;
 import store.order.vo.OrderResult;
 import store.order.vo.OrderResultQuantity;
@@ -54,7 +54,7 @@ class PromotionInsufficientStrategyTest {
                                                 OrderResultQuantity orderResultQuantity,
                                                 ProductStock stock) {
         //when
-        OrderResult orderResult = promotionInsufficientStrategy.process(command, OrderApprover.builder()
+        OrderResult orderResult = promotionInsufficientStrategy.process(command, OrderFunction.builder()
                 .fullPayment((objects) -> true)
                 .build());
 
@@ -75,7 +75,7 @@ class PromotionInsufficientStrategyTest {
                                                 OrderResultQuantity orderResultQuantity,
                                                 ProductStock stock) {
         //when
-        OrderResult orderResult = promotionInsufficientStrategy.process(command, OrderApprover.builder()
+        OrderResult orderResult = promotionInsufficientStrategy.process(command, OrderFunction.builder()
                 .fullPayment((objects) -> false)
                 .build());
 

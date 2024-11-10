@@ -3,7 +3,7 @@ package store.order.service;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderItem;
 import store.order.dto.OrderItems;
 import store.domain.entity.Product;
@@ -81,7 +81,7 @@ class OrderServiceTest {
         OrderItems orderItems = OrderItems.from(List.of(orderItem));
 
         //when
-        OrderResults orderResults = orderService.order(orderItems, OrderApprover.builder()
+        OrderResults orderResults = orderService.order(orderItems, OrderFunction.builder()
                 .freeQuantity(objects -> true)
                 .fullPayment(objects -> true)
                 .build());

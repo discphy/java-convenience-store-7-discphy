@@ -9,7 +9,7 @@ import store.domain.vo.ProductInfo;
 import store.domain.vo.ProductStock;
 import store.domain.vo.PromotionCount;
 import store.domain.vo.PromotionDate;
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderCommand;
 import store.order.vo.OrderResult;
 import store.order.vo.OrderResultQuantity;
@@ -45,7 +45,7 @@ class GeneralStockStrategyTest {
                                                 ProductStock stock) {
         //when
         boolean condition = generalStockStrategy.condition(command);
-        OrderResult orderResult = generalStockStrategy.process(command, OrderApprover.builder().build());
+        OrderResult orderResult = generalStockStrategy.process(command, OrderFunction.builder().build());
 
         //then
         assertThat(condition).isTrue();

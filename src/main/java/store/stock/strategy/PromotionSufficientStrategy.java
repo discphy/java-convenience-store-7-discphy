@@ -1,6 +1,6 @@
 package store.stock.strategy;
 
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderCommand;
 import store.domain.vo.PromotionCount;
 import store.order.vo.OrderResult;
@@ -14,11 +14,11 @@ public class PromotionSufficientStrategy implements StockStrategy {
     }
 
     @Override
-    public OrderResult process(OrderCommand command, OrderApprover approver) {
+    public OrderResult process(OrderCommand command, OrderFunction function) {
         int totalQuantity = command.getQuantity();
         int freeQuantity = calculateFreeQuantity(command);
 
-        if (isAddFreeQuantity(command) && isApprovedForFreeQuantity(command, approver)) {
+        if (isAddFreeQuantity(command) && isApprovedForFreeQuantity(command, function)) {
             freeQuantity++;
             totalQuantity++;
         }
@@ -53,8 +53,8 @@ public class PromotionSufficientStrategy implements StockStrategy {
         return command.getStock().getPromotionStock() >= command.getQuantity() + count.getCount();
     }
 
-    private Boolean isApprovedForFreeQuantity(OrderCommand command, OrderApprover approver) {
-        return approver.freeQuantity().approve(command.getInfo().getName());
+    private Boolean isApprovedForFreeQuantity(OrderCommand command, OrderFunction function) {
+        return function.freeQuantity().approve(command.getInfo().getName());
     }
 
     private OrderResult createOrderResult(OrderCommand command, int totalQuantity, int freeQuantity) {

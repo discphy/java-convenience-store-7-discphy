@@ -1,6 +1,6 @@
 package store.order.service;
 
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderCommand;
 import store.order.dto.OrderItem;
 import store.order.dto.OrderItems;
@@ -34,17 +34,17 @@ public class OrderService {
         items.getOrderItems().forEach(this::validate);
     }
 
-    public OrderResults order(OrderItems items, OrderApprover approver) {
+    public OrderResults order(OrderItems items, OrderFunction function) {
         return OrderResults.from(items.getOrderItems().stream()
-                .map(item -> order(item, approver))
+                .map(item -> order(item, function))
                 .toList());
     }
 
-    private OrderResult order(OrderItem item, OrderApprover approver) {
+    private OrderResult order(OrderItem item, OrderFunction function) {
         Product product = getProduct(item);
         OrderCommand command = item.toCommand(product);
 
-        OrderResult result = stockStrategyResolver.resolve(command).process(command, approver);
+        OrderResult result = stockStrategyResolver.resolve(command).process(command, function);
 
         productRepository.updateStock(product.getId(), result.getUpdateStock());
 

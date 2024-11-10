@@ -1,6 +1,6 @@
 package store.stock.strategy;
 
-import store.order.dto.OrderApprover;
+import store.order.dto.OrderFunction;
 import store.order.dto.OrderCommand;
 import store.order.vo.OrderResult;
 import store.order.vo.OrderResultQuantity;
@@ -13,12 +13,12 @@ public class PromotionInsufficientStrategy implements StockStrategy {
     }
 
     @Override
-    public OrderResult process(OrderCommand command, OrderApprover approver) {
+    public OrderResult process(OrderCommand command, OrderFunction function) {
         int totalQuantity = calculateTotalQuantity(command);
         int freeQuantity = calculateFreeQuantity(command);
         int fullPaymentQuantity = command.getQuantity() - totalQuantity;
 
-        if (isApprovedForFullPayment(command, approver, fullPaymentQuantity)) {
+        if (isApprovedForFullPayment(command, function, fullPaymentQuantity)) {
             return createOrderResult(command, totalQuantity + fullPaymentQuantity, freeQuantity,
                     command.getQuantity() - command.getStock().getPromotionStock(),
                     command.getStock().getPromotionStock());
@@ -43,8 +43,8 @@ public class PromotionInsufficientStrategy implements StockStrategy {
         return calculateFreeQuantity(command) * command.getPromotion().getCount().totalCount();
     }
 
-    private Boolean isApprovedForFullPayment(OrderCommand command, OrderApprover approver, int fullPaymentQuantity) {
-        return approver.fullPayment().approve(command.getInfo().getName(), fullPaymentQuantity);
+    private Boolean isApprovedForFullPayment(OrderCommand command, OrderFunction function, int fullPaymentQuantity) {
+        return function.fullPayment().approve(command.getInfo().getName(), fullPaymentQuantity);
     }
 
     private OrderResult createOrderResult(OrderCommand command,
