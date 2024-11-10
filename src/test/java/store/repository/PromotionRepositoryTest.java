@@ -1,6 +1,5 @@
 package store.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.entity.Promotion;
@@ -10,7 +9,6 @@ import store.entity.PromotionDate;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PromotionRepositoryTest {
 

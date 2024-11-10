@@ -34,9 +34,7 @@ public class PromotionSufficientStrategy implements StockStrategy {
             totalQuantity++;
         }
 
-        return command.toResult(
-                getOrderResultQuantity(totalQuantity, freeQuantity),
-                getUpdateStock(stock, totalQuantity));
+        return command.toResult(getOrderResultQuantity(totalQuantity, freeQuantity), getUpdateStock(stock, totalQuantity));
     }
 
     private OrderResultQuantity getOrderResultQuantity(int totalQuantity, int freeQuantity) {

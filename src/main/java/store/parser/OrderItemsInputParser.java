@@ -19,15 +19,10 @@ public class OrderItemsInputParser implements InputParser<OrderItems> {
         validate(input);
 
         Matcher matcher = getMatcher(input);
-
         List<OrderItem> orderItems = new ArrayList<>();
 
         while (matcher.find()) {
-            String productName = matcher.group(1);
-            int orderQuantity = Integer.parseInt(matcher.group(2));
-
-
-            orderItems.add(OrderItem.of(productName, orderQuantity));
+            orderItems.add(OrderItem.of(matcher.group(1), Integer.parseInt(matcher.group(2))));
         }
 
         return OrderItems.from(orderItems);

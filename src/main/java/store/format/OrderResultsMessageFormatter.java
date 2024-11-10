@@ -17,18 +17,28 @@ public class OrderResultsMessageFormatter implements MessageFormatter<OrderResul
     public String format(OrderResults orderResults) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(START_RECEIPT_DELIMITER).append("\n");
-        orderResultsMessage(builder, orderResults);
+        orderMessage(orderResults, builder);
+        freeQuantityMessage(orderResults, builder);
+        finalMessage(orderResults, builder);
 
+        return builder.toString();
+    }
+
+    private void finalMessage(OrderResults orderResults, StringBuilder builder) {
+        builder.append(FINAL_RECEIPT_DELIMITER).append("\n");
+        finalMessage(builder, orderResults);
+    }
+
+    private void freeQuantityMessage(OrderResults orderResults, StringBuilder builder) {
         if (hasFreeQuantity(orderResults)) {
             builder.append(FREE_QUANTITY_DELIMITER).append("\n");
             freeQuantityMessage(builder, orderResults);
         }
+    }
 
-        builder.append(FINAL_RECEIPT_DELIMITER).append("\n");
-        finalMessage(builder, orderResults);
-
-        return builder.toString();
+    private void orderMessage(OrderResults orderResults, StringBuilder builder) {
+        builder.append(START_RECEIPT_DELIMITER).append("\n");
+        orderResultsMessage(builder, orderResults);
     }
 
     private void orderResultsMessage(StringBuilder builder, OrderResults orderResults) {

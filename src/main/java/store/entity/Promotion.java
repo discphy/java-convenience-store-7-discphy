@@ -1,5 +1,7 @@
 package store.entity;
 
+import static store.constant.ErrorMessage.NOT_BLANK_PROMOTION_NAME;
+
 public class Promotion {
 
     private Long id;
@@ -37,7 +39,7 @@ public class Promotion {
 
     private void validateName(String name) {
         if (name.isBlank()) {
-            throw new IllegalArgumentException("프로모션명은 비어 있을 수 없습니다.");
+            throw new IllegalArgumentException(NOT_BLANK_PROMOTION_NAME.message());
         }
     }
 }

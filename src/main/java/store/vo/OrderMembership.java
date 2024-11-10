@@ -5,7 +5,7 @@ public class OrderMembership {
     private static final double DISCOUNT_RATE = 0.3d;
     private static final long LIMIT_MONEY = 8_000L;
 
-    private boolean isApply = false;
+    private boolean isApply;
 
     public OrderMembership(boolean isApply) {
         this.isApply = isApply;
