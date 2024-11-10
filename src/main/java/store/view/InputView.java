@@ -1,8 +1,8 @@
 package store.view;
 
 import camp.nextstep.edu.missionutils.Console;
-import store.parser.AgreementInputParser;
-import store.parser.InputParser;
+import store.common.parser.ApprovalParser;
+import store.manager.ParseManager;
 
 public class InputView {
 
@@ -12,7 +12,7 @@ public class InputView {
     private static final String MEMBERSHIP_DISCOUNT = "\n멤버십 할인을 받으시겠습니까? (Y/N)";
     private static final String RETRY_ORDER = "감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)";
 
-    public <T> T readOrderItems(InputParser<T> parser) {
+    public <T> T readOrderItems(ParseManager<T> parser) {
         System.out.println(ORDER_ITEM);
         return readProcess(parser);
     }
@@ -38,11 +38,10 @@ public class InputView {
     }
 
     private Boolean readAgree() {
-        AgreementInputParser processor = AgreementInputParser.getInstance();
-        return readProcess(processor);
+        return readProcess(ApprovalParser::parse);
     }
 
-    private <T> T readProcess(InputParser<T> parser) {
+    private <T> T readProcess(ParseManager<T> parser) {
         try {
             return parser.parse(Console.readLine());
         } catch (IllegalArgumentException e) {
