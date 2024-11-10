@@ -25,12 +25,10 @@ public class ProductInitDto {
     }
 
     public static ProductInitDto from(Map<String, String> product) {
-        String name = product.get("name");
-        long price = getLong(product, "price");
-        int quantity = getInt(product, "quantity");
-        String promotion = product.get("promotion");
-
-        return new ProductInitDto(name, price, quantity, promotion);
+        return new ProductInitDto(product.get("name"),
+                getLong(product, "price"),
+                getInt(product, "quantity"),
+                product.get("promotion"));
     }
 
     public String getName() {

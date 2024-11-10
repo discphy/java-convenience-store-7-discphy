@@ -6,37 +6,48 @@ import store.entity.ProductStock;
 import store.vo.OrderResult;
 import store.vo.OrderResultQuantity;
 
-import static store.constant.OrderConstant.NOT_CHAGE_STOCK;
+import static store.constant.OrderConstant.NOT_CHANGE_STOCK;
 
 public class GeneralStockStrategy implements StockStrategy {
 
     @Override
     public boolean condition(OrderCommand command) {
-        return command.getPromotion() == null
-                || !command.getPromotion().isValid()
-                || command.getStock().getPromotionStock() == 0;
+        return hasNotValidPromotion(command) || isPromotionStockEmpty(command);
     }
 
     @Override
     public OrderResult process(OrderCommand command, OrderApprover approver) {
-        return command.toResult(getOrderResultQuantity(command), getUpdateStock(command));
-    }
-
-    private OrderResultQuantity getOrderResultQuantity(OrderCommand command) {
-        return OrderResultQuantity.of(command.getQuantity(), NOT_CHAGE_STOCK);
-    }
-
-    private ProductStock getUpdateStock(OrderCommand command) {
         ProductStock stock = command.getStock();
 
+        int promotionStock = Math.min(stock.getPromotionStock(), command.getQuantity());
+        int generalStock = calculateGeneralStock(command);
+
+        return createOrderResult(command, generalStock, promotionStock);
+    }
+
+    private boolean hasNotValidPromotion(OrderCommand command) {
+        return command.getPromotion() == null || !command.getPromotion().isValid();
+    }
+
+    private boolean isPromotionStockEmpty(OrderCommand command) {
+        return command.getStock().getPromotionStock() == 0;
+    }
+
+    private int calculateGeneralStock(OrderCommand command) {
+        ProductStock stock = command.getStock();
         int generalStock = command.getQuantity() - stock.getPromotionStock();
-        int promotionStock = stock.getPromotionStock();
 
         if (stock.getPromotionStock() > command.getQuantity()) {
-            promotionStock = command.getQuantity();
-            generalStock = 0;
+            return NOT_CHANGE_STOCK;
         }
 
-        return stock.update(generalStock, promotionStock);
+        return generalStock;
+    }
+
+    private OrderResult createOrderResult(OrderCommand command, int generalStock, int promotionStock) {
+        return command.toResult(
+                OrderResultQuantity.of(command.getQuantity(), NOT_CHANGE_STOCK),
+                command.getStock().update(generalStock, promotionStock)
+        );
     }
 }

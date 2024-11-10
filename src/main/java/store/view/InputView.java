@@ -46,7 +46,7 @@ public class InputView {
         try {
             return parser.parse(Console.readLine());
         } catch (IllegalArgumentException e) {
-            System.out.println("[ERROR] " + e.getMessage());
+            System.out.println(e.getMessage());
             return readProcess(parser);
         }
     }

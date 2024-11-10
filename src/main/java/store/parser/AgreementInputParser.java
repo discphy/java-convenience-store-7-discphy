@@ -33,8 +33,7 @@ public class AgreementInputParser implements InputParser<Boolean> {
     }
 
     private boolean isInvalidAgreement(String input) {
-        return Arrays.stream(AgreementOption.values())
-                .noneMatch(matchesAgreement(input));
+        return Arrays.stream(AgreementOption.values()).noneMatch(matchesAgreement(input));
     }
 
     private Predicate<AgreementOption> matchesAgreement(String input) {

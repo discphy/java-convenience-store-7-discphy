@@ -8,6 +8,8 @@ import java.util.List;
 
 public class OutputView {
 
+    private static final String HELLO_MESSAGE = "\n안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n";
+
     private final MessageFormatter<Product> productMessageFormatter;
     private final MessageFormatter<OrderResults> orderResultsMessageFormatter;
 
@@ -18,7 +20,7 @@ public class OutputView {
     }
 
     public void printProducts(List<Product> products) {
-        System.out.println("안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n");
+        System.out.println(HELLO_MESSAGE);
 
         products.stream()
                 .map(productMessageFormatter::format)

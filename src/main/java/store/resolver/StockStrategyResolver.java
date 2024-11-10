@@ -18,7 +18,7 @@ public class StockStrategyResolver {
     private final Map<StockStrategyCondition, StockStrategy> strategyMap = new EnumMap<>(StockStrategyCondition.class);
 
     public StockStrategyResolver() {
-        strategyMap.put(NO_PROMOTION, new GeneralStockStrategy());
+        strategyMap.put(GENERAL_STOCK, new GeneralStockStrategy());
         strategyMap.put(PROMOTION_SUFFICIENT, new PromotionSufficientStrategy());
         strategyMap.put(PROMOTION_INSUFFICIENT, new PromotionInsufficientStrategy());
     }

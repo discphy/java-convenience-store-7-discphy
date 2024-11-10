@@ -27,13 +27,11 @@ public class PromotionInitDto {
     }
 
     public static PromotionInitDto from(Map<String, String> promotion) {
-        String name = promotion.get("name");
-        int buy = getInt(promotion, "buy");
-        int get = getInt(promotion, "get");
-        LocalDate startDate = getLocalDate(promotion, "start_date");
-        LocalDate endDate = getLocalDate(promotion, "end_date");
-
-        return new PromotionInitDto(name, buy, get, startDate, endDate);
+        return new PromotionInitDto(promotion.get("name"),
+                getInt(promotion, "buy"),
+                getInt(promotion, "get"),
+                getLocalDate(promotion, "start_date"),
+                getLocalDate(promotion, "end_date"));
     }
 
     public Promotion toEntity() {

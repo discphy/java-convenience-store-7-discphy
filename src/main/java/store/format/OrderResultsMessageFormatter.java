@@ -5,9 +5,9 @@ import store.vo.OrderResults;
 
 public class OrderResultsMessageFormatter implements MessageFormatter<OrderResults> {
 
-    private static final String START_RECEIPT_DELIMITER = "=============W 편의점=============";
-    private static final String FREE_QUANTITY_DELIMITER = "=============증    정=============";
-    private static final String FINAL_RECEIPT_DELIMITER = "=================================";
+    private static final String START_RECEIPT_DELIMITER = "\n=============W 편의점=============\n";
+    private static final String FREE_QUANTITY_DELIMITER = "=============증    정=============\n";
+    private static final String FINAL_RECEIPT_DELIMITER = "=================================\n";
     private static final String NAME_FORMAT = "%-15s";
     private static final String QUANTITY_FORMAT = "%5s";
     private static final String PRICE_FORMAT = "%10s";
@@ -17,61 +17,43 @@ public class OrderResultsMessageFormatter implements MessageFormatter<OrderResul
     public String format(OrderResults orderResults) {
         StringBuilder builder = new StringBuilder();
 
-        orderMessage(orderResults, builder);
-        freeQuantityMessage(orderResults, builder);
-        finalMessage(orderResults, builder);
+        appendOrderSection(orderResults, builder);
+        appendFreeQuantitySection(orderResults, builder);
+        appendFinalSection(orderResults, builder);
 
         return builder.toString();
     }
 
-    private void finalMessage(OrderResults orderResults, StringBuilder builder) {
-        builder.append(FINAL_RECEIPT_DELIMITER).append("\n");
-        finalMessage(builder, orderResults);
+    private void appendOrderSection(OrderResults orderResults, StringBuilder builder) {
+        builder.append(START_RECEIPT_DELIMITER);
+        builder.append(formatRow("상품명", "수량", "금액"));
+        orderResults.getOrderResults().forEach(orderResult -> builder.append(formatOrderResult(orderResult)));
     }
 
-    private void freeQuantityMessage(OrderResults orderResults, StringBuilder builder) {
-        if (hasFreeQuantity(orderResults)) {
-            builder.append(FREE_QUANTITY_DELIMITER).append("\n");
-            freeQuantityMessage(builder, orderResults);
+    private void appendFreeQuantitySection(OrderResults orderResults, StringBuilder builder) {
+        if (orderResults.hasFreeQuantity()) {
+            builder.append(FREE_QUANTITY_DELIMITER);
+            orderResults.getOrderResults().stream()
+                    .filter(OrderResult::hasFreeQuantity)
+                    .forEach(result -> builder.append(formatFreeQuantity(result)));
         }
     }
 
-    private void orderMessage(OrderResults orderResults, StringBuilder builder) {
-        builder.append(START_RECEIPT_DELIMITER).append("\n");
-        orderResultsMessage(builder, orderResults);
+    private void appendFinalSection(OrderResults orderResults, StringBuilder builder) {
+        builder.append(FINAL_RECEIPT_DELIMITER);
+        finalMessage(builder, orderResults);
     }
 
-    private void orderResultsMessage(StringBuilder builder, OrderResults orderResults) {
-        builder.append(format("상품명", "수량", "금액"));
-        orderResults.getOrderResults().stream()
-                .map(this::orderResultMessage)
-                .forEach(builder::append);
-    }
-
-    private String orderResultMessage(OrderResult orderResult) {
-        return format(orderResult.getProductInfo().getName(),
+    private String formatOrderResult(OrderResult orderResult) {
+        return formatRow(orderResult.getProductInfo().getName(),
                 orderResult.getOrderResultQuantity().getTotalQuantity(),
                 orderResult.getTotalPrice());
     }
 
-    private boolean hasFreeQuantity(OrderResults orderResults) {
-        return orderResults.getOrderResults().stream()
-                .anyMatch(this::hasFreeQuantity);
-    }
-
-    private boolean hasFreeQuantity(OrderResult orderResult) {
-        return orderResult.getOrderResultQuantity().getFreeQuantity() > 0;
-    }
-
-    private void freeQuantityMessage(StringBuilder builder, OrderResults orderResults) {
-        orderResults.getOrderResults().stream()
-                .filter(this::hasFreeQuantity)
-                .map(this::freeQuantityMessage)
-                .forEach(builder::append);
-    }
-
-    private String freeQuantityMessage(OrderResult orderResult) {
-        return nameQuantityFormat(orderResult.getProductInfo().getName(), orderResult.getOrderResultQuantity().getFreeQuantity());
+    private String formatFreeQuantity(OrderResult orderResult) {
+        return formatRow(orderResult.getProductInfo().getName(),
+                formatNumber(orderResult.getOrderResultQuantity().getFreeQuantity()),
+                "");
     }
 
     private void finalMessage(StringBuilder builder, OrderResults orderResults) {
@@ -80,45 +62,37 @@ public class OrderResultsMessageFormatter implements MessageFormatter<OrderResul
         long membershipDiscountPrice = orderResults.membershipDiscountPrice();
         long payment = totalPrice - promotionDiscountPrice - membershipDiscountPrice;
 
-        builder.append(format("총구매액", orderResults.totalQuantity(), totalPrice));
-        builder.append(namePriceFormat("행사할인", -promotionDiscountPrice));
-        builder.append(namePriceFormat("멤버십할인", -membershipDiscountPrice));
-        builder.append(namePriceFormat("내실돈", payment));
+        builder.append(formatRow("총구매액", orderResults.totalQuantity(), totalPrice));
+        builder.append(formatRow("행사할인", "", formatNumber(-promotionDiscountPrice)));
+        builder.append(formatRow("멤버십할인", "", formatNumber(-membershipDiscountPrice)));
+        builder.append(formatRow("내실돈", "", formatNumber(payment)));
     }
 
-    private String nameQuantityFormat(String name, long quantity) {
-        return format(name, number(quantity), "");
+    private String formatRow(String name, int quantity, long price) {
+        return formatRow(name, formatNumber(quantity), formatNumber(price));
     }
 
-    private String namePriceFormat(String name, long price) {
-        return format(name, "", number(price));
+    private String formatRow(String name, String quantity, String price) {
+        return String.format(ORDER_DEFAULT_FORMAT, formatName(name), formatQuantity(quantity), formatPrice(price));
     }
 
-    private String format(String name, int quantity, long price) {
-        return format(name, number(quantity), number(price));
-    }
-
-    private String format(String name, String quantity, String price) {
-        return String.format(ORDER_DEFAULT_FORMAT, name(name), quantity(quantity), price(price));
-    }
-
-    private String name(String name) {
+    private String formatName(String name) {
         return String.format(NAME_FORMAT, name);
     }
 
-    private String quantity(String quantity) {
+    private String formatQuantity(String quantity) {
         return String.format(QUANTITY_FORMAT, quantity);
     }
 
-    private String price(String price) {
+    private String formatPrice(String price) {
         return String.format(PRICE_FORMAT, price);
     }
 
-    private String number(long number) {
+    private String formatNumber(long number) {
         return String.format("%,d", number);
     }
 
-    private String number(int number) {
+    private String formatNumber(int number) {
         return String.format("%,d", number);
     }
 }

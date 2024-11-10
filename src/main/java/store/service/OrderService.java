@@ -14,7 +14,7 @@ import store.vo.OrderResults;
 import java.util.List;
 
 import static store.constant.ErrorMessage.INVALID_INPUT_NOT_EXIST_PRODUCT;
-import static store.constant.ErrorMessage.INVALID_INPUT_ORDER_QUANTITY;
+import static store.constant.ErrorMessage.INVALID_INPUT_EXCEED_STOCK;
 
 public class OrderService {
 
@@ -55,7 +55,7 @@ public class OrderService {
         Product product = getProduct(orderItem);
 
         if (hasNotSufficientStock(orderItem.getQuantity(), product.getStock())) {
-            throw new IllegalArgumentException(INVALID_INPUT_ORDER_QUANTITY.message());
+            throw new IllegalArgumentException(INVALID_INPUT_EXCEED_STOCK.message());
         }
     }
 

@@ -24,6 +24,10 @@ public class OrderResults {
         return orderMembership;
     }
 
+    public boolean hasFreeQuantity() {
+        return orderResults.stream().anyMatch(OrderResult::hasFreeQuantity);
+    }
+
     public long totalPrice() {
         return orderResults.stream()
                 .mapToLong(OrderResult::getTotalPrice)

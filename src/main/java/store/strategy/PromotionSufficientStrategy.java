@@ -2,46 +2,67 @@ package store.strategy;
 
 import store.dto.OrderApprover;
 import store.dto.OrderCommand;
-import store.entity.ProductStock;
 import store.entity.PromotionCount;
 import store.vo.OrderResult;
 import store.vo.OrderResultQuantity;
 
-import static store.constant.OrderConstant.NOT_CHAGE_STOCK;
+import static store.constant.OrderConstant.NOT_CHANGE_STOCK;
 
 public class PromotionSufficientStrategy implements StockStrategy {
 
     @Override
     public boolean condition(OrderCommand command) {
-        return command.getPromotion() != null
-                && command.getPromotion().isValid()
-                && command.getStock().getPromotionStock() >= command.getQuantity();
+        return hasValidPromotion(command) && hasSufficientPromotionStock(command);
     }
 
     @Override
     public OrderResult process(OrderCommand command, OrderApprover approver) {
-        ProductStock stock = command.getStock();
-        PromotionCount count = command.getPromotion().getCount();
-
         int totalQuantity = command.getQuantity();
-        int freeQuantity = command.getQuantity() / count.totalCount();
+        int freeQuantity = calculateFreeQuantity(command);
 
-        boolean isAddFreeQuantity = count.buyCount() == command.getQuantity() % count.totalCount()
-                && stock.getPromotionStock() >= command.getQuantity() + count.getCount();
-
-        if (isAddFreeQuantity && approver.freeQuantity().isAgree(command.getInfo().getName())) {
+        if (isAddFreeQuantity(command) && isApprovedForFreeQuantity(command, approver)) {
             freeQuantity++;
             totalQuantity++;
         }
 
-        return command.toResult(getOrderResultQuantity(totalQuantity, freeQuantity), getUpdateStock(stock, totalQuantity));
+        return createOrderResult(command, totalQuantity, freeQuantity);
     }
 
-    private OrderResultQuantity getOrderResultQuantity(int totalQuantity, int freeQuantity) {
-        return OrderResultQuantity.of(totalQuantity, freeQuantity);
+    private boolean hasValidPromotion(OrderCommand command) {
+        return command.getPromotion() != null && command.getPromotion().isValid();
     }
 
-    private ProductStock getUpdateStock(ProductStock stock, int promotionQuantity) {
-        return stock.update(NOT_CHAGE_STOCK, promotionQuantity);
+    private boolean hasSufficientPromotionStock(OrderCommand command) {
+        return command.getStock().getPromotionStock() >= command.getQuantity();
+    }
+
+    private int calculateFreeQuantity(OrderCommand command) {
+        PromotionCount count = command.getPromotion().getCount();
+        return command.getQuantity() / count.totalCount();
+    }
+
+    private boolean isAddFreeQuantity(OrderCommand command) {
+        return isBuyCountMatch(command) && hasStockForFreeQuantity(command);
+    }
+
+    private boolean isBuyCountMatch(OrderCommand command) {
+        PromotionCount count = command.getPromotion().getCount();
+        return count.buyCount() == command.getQuantity() % count.totalCount();
+    }
+
+    private boolean hasStockForFreeQuantity(OrderCommand command) {
+        PromotionCount count = command.getPromotion().getCount();
+        return command.getStock().getPromotionStock() >= command.getQuantity() + count.getCount();
+    }
+
+    private Boolean isApprovedForFreeQuantity(OrderCommand command, OrderApprover approver) {
+        return approver.freeQuantity().isAgree(command.getInfo().getName());
+    }
+
+    private OrderResult createOrderResult(OrderCommand command, int totalQuantity, int freeQuantity) {
+        return command.toResult(
+                OrderResultQuantity.of(totalQuantity, freeQuantity),
+                command.getStock().update(NOT_CHANGE_STOCK, totalQuantity)
+        );
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static store.constant.ErrorMessage.INVALID_INPUT_NOT_EXIST_PRODUCT;
-import static store.constant.ErrorMessage.INVALID_INPUT_ORDER_QUANTITY;
+import static store.constant.ErrorMessage.INVALID_INPUT_EXCEED_STOCK;
 
 class OrderServiceTest {
 
@@ -71,7 +71,7 @@ class OrderServiceTest {
         //when
         assertThatThrownBy(() -> orderService.validate(orderItems))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(INVALID_INPUT_ORDER_QUANTITY.message());
+                .hasMessage(INVALID_INPUT_EXCEED_STOCK.message());
     }
 
     @Test

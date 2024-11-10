@@ -26,7 +26,7 @@ public class FileReader {
         try {
             return Files.readAllLines(path);
         } catch (IOException e) {
-            throw new IllegalArgumentException(FAIL_READ_FILE.message());
+            throw new IllegalArgumentException(FAILED_READ_FILE.message());
         }
     }
 

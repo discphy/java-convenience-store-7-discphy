@@ -46,4 +46,8 @@ public class OrderResult {
 
         return productInfo.getPrice() * orderResultQuantity.getTotalQuantity();
     }
+
+    public boolean hasFreeQuantity() {
+        return orderResultQuantity.getFreeQuantity() > 0;
+    }
 }

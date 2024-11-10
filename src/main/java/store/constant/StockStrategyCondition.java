@@ -2,7 +2,7 @@ package store.constant;
 
 public enum StockStrategyCondition {
 
-    NO_PROMOTION,
+    GENERAL_STOCK,
     PROMOTION_SUFFICIENT,
     PROMOTION_INSUFFICIENT,
 }
