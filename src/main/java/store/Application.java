@@ -1,7 +1,13 @@
 package store;
 
+import store.controller.OrderController;
+
 public class Application {
+
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        ApplicationConfig config = new ApplicationConfig();
+
+        OrderController orderController = config.orderController();
+        orderController.run();
     }
 }
