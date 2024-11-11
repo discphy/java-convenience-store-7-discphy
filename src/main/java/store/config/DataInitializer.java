@@ -24,8 +24,7 @@ public class DataInitializer {
     private final ProductRepository productRepository;
     private final PromotionRepository promotionRepository;
 
-    public DataInitializer(ProductRepository productRepository,
-                           PromotionRepository promotionRepository) {
+    public DataInitializer(ProductRepository productRepository, PromotionRepository promotionRepository) {
         this.productRepository = productRepository;
         this.promotionRepository = promotionRepository;
     }
@@ -49,25 +48,6 @@ public class DataInitializer {
                 .forEach(this::mergeProduct);
     }
 
-    private void mergeProduct(Product product) {
-        Optional<Product> findProduct = productRepository.findByName(product.getInfo().getName());
-
-        if (findProduct.isPresent()) {
-            update(product, findProduct.get());
-            return;
-        }
-
-        productRepository.save(product);
-    }
-
-    private void update(Product product, Product mergeProduct) {
-        if (product.getPromotion() != null) {
-            productRepository.updatePromotion(mergeProduct.getId(), product.getPromotion());
-        }
-
-        productRepository.updateStock(mergeProduct.getId(), mergeProduct.getStock().add(product.getStock()));
-    }
-
     private Product toProductEntity(ProductInitDto productInitDto) {
         Promotion promotion = getPromotion(productInitDto.getPromotionName());
 
@@ -85,6 +65,25 @@ public class DataInitializer {
 
         return promotionRepository.findByName(promotionName)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_PROMOTION.message()));
+    }
+
+    private void mergeProduct(Product product) {
+        Optional<Product> findProduct = productRepository.findByName(product.getInfo().getName());
+
+        if (findProduct.isPresent()) {
+            update(product, findProduct.get());
+            return;
+        }
+
+        productRepository.save(product);
+    }
+
+    private void update(Product product, Product mergeProduct) {
+        if (product.getPromotion() != null) {
+            productRepository.updatePromotion(mergeProduct.getId(), product.getPromotion());
+        }
+
+        productRepository.updateStock(mergeProduct.getId(), mergeProduct.getStock().add(product.getStock()));
     }
 
     private List<Map<String, String>> readMap(FileName fileName) {

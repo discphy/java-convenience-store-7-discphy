@@ -12,6 +12,7 @@ public class OrderResultsFormatter {
     private static final String QUANTITY_FORMAT = "%5s";
     private static final String PRICE_FORMAT = "%10s";
     private static final String ORDER_DEFAULT_FORMAT = NAME_FORMAT + QUANTITY_FORMAT + PRICE_FORMAT + "%n";
+    private static final String NUMBER_FORMAT = "%,d";
 
     public static String format(OrderResults orderResults) {
         StringBuilder builder = new StringBuilder();
@@ -88,10 +89,10 @@ public class OrderResultsFormatter {
     }
 
     private static String formatNumber(long number) {
-        return String.format("%,d", number);
+        return String.format(NUMBER_FORMAT, number);
     }
 
     private static String formatNumber(int number) {
-        return String.format("%,d", number);
+        return String.format(NUMBER_FORMAT, number);
     }
 }

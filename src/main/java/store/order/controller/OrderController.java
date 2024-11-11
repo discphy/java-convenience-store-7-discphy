@@ -16,9 +16,7 @@ public class OrderController {
     private final OutputView outputView;
     private final OrderService orderService;
 
-    public OrderController(InputView inputView,
-                           OutputView outputView,
-                           OrderService orderService) {
+    public OrderController(InputView inputView, OutputView outputView, OrderService orderService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.orderService = orderService;
@@ -30,15 +28,38 @@ public class OrderController {
     }
 
     private void run(ApprovalFunction function) {
-        outputView.printProducts(orderService.getProducts());
-        OrderResults results = orderService.order(createOrderItems(), createFunction());
+        printProducts();
+
+        OrderResults results = orderResults();
 
         membership(results);
-        outputView.printReceipt(results);
+
+        printReceipt(results);
 
         if (function.approve()) {
             run(function);
         }
+    }
+
+    private void printProducts() {
+        outputView.printProducts(orderService.getProducts());
+    }
+
+    private OrderResults orderResults() {
+        OrderItems orderItems = createOrderItems();
+        OrderFunction orderFunction = createFunction();
+
+        return orderService.order(orderItems, orderFunction);
+    }
+
+    private void membership(OrderResults results) {
+        if (inputView.readAgreeMembershipDiscount()) {
+            results.getOrderMembership().apply();
+        }
+    }
+
+    private void printReceipt(OrderResults results) {
+        outputView.printReceipt(results);
     }
 
     private OrderItems createOrderItems() {
@@ -58,12 +79,6 @@ public class OrderController {
                 .freeQuantity(inputView::readAgreeFreeQuantity)
                 .fullPayment(inputView::readAgreeFullPayment)
                 .build();
-    }
-
-    private void membership(OrderResults results) {
-        if (inputView.readAgreeMembershipDiscount()) {
-            results.getOrderMembership().apply();
-        }
     }
 
     private ApprovalFunction retryOrder() {

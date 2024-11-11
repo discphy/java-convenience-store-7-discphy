@@ -15,7 +15,9 @@ public class OrderResult {
         this.updateStock = updateStock;
     }
 
-    public static OrderResult of(ProductInfo productInfo, OrderResultQuantity orderResultQuantity, ProductStock updateStock) {
+    public static OrderResult of(ProductInfo productInfo,
+                                 OrderResultQuantity orderResultQuantity,
+                                 ProductStock updateStock) {
         return new OrderResult(productInfo, orderResultQuantity, updateStock);
     }
 

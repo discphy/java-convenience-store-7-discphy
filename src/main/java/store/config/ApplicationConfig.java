@@ -18,10 +18,7 @@ public class ApplicationConfig {
     private StockStrategyResolver stockStrategyResolver;
 
     public OrderController orderController() {
-        return new OrderController(
-                inputView(),
-                outputView(),
-                orderService());
+        return new OrderController(inputView(), outputView(), orderService());
     }
 
     public DataInitializer dataInitializer() {

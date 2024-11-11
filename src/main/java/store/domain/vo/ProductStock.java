@@ -28,7 +28,8 @@ public class ProductStock {
     }
 
     public ProductStock add(ProductStock anotherStock) {
-        return new ProductStock(this.generalStock + anotherStock.generalStock, this.promotionStock + anotherStock.promotionStock);
+        return new ProductStock(this.generalStock + anotherStock.generalStock,
+                this.promotionStock + anotherStock.promotionStock);
     }
 
     public ProductStock update(int updateGeneralStock, int updatePromotionStock) {
