@@ -60,7 +60,7 @@ public class OrderResultsFormatter {
         long totalPrice = orderResults.totalPrice();
         long promotionDiscountPrice = orderResults.promotionDiscountPrice();
         long membershipDiscountPrice = orderResults.membershipDiscountPrice();
-        long payment = totalPrice - promotionDiscountPrice - membershipDiscountPrice;
+        long payment = orderResults.paymentPrice();
 
         builder.append(formatRow("총구매액", orderResults.totalQuantity(), totalPrice));
         builder.append(formatRow("행사할인", "", formatNumber(-promotionDiscountPrice)));

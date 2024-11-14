@@ -51,4 +51,8 @@ public class OrderResults {
                 .mapToLong(OrderResult::getMembershipDiscountPrice)
                 .sum());
     }
+
+    public long paymentPrice() {
+        return totalPrice() - promotionDiscountPrice() - membershipDiscountPrice();
+    }
 }
