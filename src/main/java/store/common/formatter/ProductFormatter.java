@@ -35,9 +35,9 @@ public class ProductFormatter {
                 stockMessage(stock));
     }
 
-    private static String stockMessage(int generalStock) {
-        if (generalStock > 0) {
-            return String.format(STOCK_FORMAT, generalStock);
+    private static String stockMessage(int stock) {
+        if (stock > 0) {
+            return String.format(STOCK_FORMAT, stock);
         }
 
         return SOLD_OUT;
